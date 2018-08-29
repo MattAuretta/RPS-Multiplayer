@@ -1,0 +1,13 @@
+.game-display {
+    border: 1px solid #222;
+    height: 250px;
+}
+
+.btn {
+    float: right;
+}
+
+#chat-display {
+    border: 1px solid #222;
+    height: 100px;
+}
