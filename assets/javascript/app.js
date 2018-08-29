@@ -21,18 +21,30 @@ var losses = 0;
 var ties = 0;
 var players = 0;
 
+//Listener for adding players to the database
 database.ref("/players/").on("value", function (snap) {
     if (snap.child("playerOne").exists()) {
         console.log("playerOne exists");
         playerOne = snap.val().playerOne;
         console.log(playerOne)
+        $("#player-one-name").text(playerOne.name);
+        $("#player-one-stats").text("Wins: " + playerOne.wins + " Losses: " + playerOne.losses);
+    } else {
+        $("#player-one-name").text("Waiting for Player 1");
+        $("#player-one-stats").text("");
     }
 
     if (snap.child("playerTwo").exists()) {
         console.log("playerTwo exists");
         playerTwo = snap.val().playerTwo;
         console.log(playerTwo)
+        $("#player-two-name").text(playerTwo.name);
+        $("#player-two-stats").text("Wins: " + playerTwo.wins + " Losses: " + playerTwo.losses);
+    } else {
+        $("#player-two-name").text("Waiting for Player 2");
+        $("#player-two-stats").text("");
     }
+
 })
 
 //When user clicks submit name button
@@ -76,5 +88,10 @@ $("#submit-name").on("click", function (event) {
             database.ref("/players/playerTwo").onDisconnect().remove();
         }
     }
+
+    $("#submit-chat").on("click", function (event) {
+        // Prevent form from submitting
+        event.preventDefault();
+    });
 
 });

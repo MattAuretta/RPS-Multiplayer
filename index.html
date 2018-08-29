@@ -23,7 +23,7 @@
         <!-- Username Form -->
         <div class="row">
             <div class="col-md-6 mx-auto">
-                <form>
+                <form id="username-form">
                     <div class="form-group">
                         <input type="text" id="name-input" class="form-control" placeholder="Enter Username">
                         <button type="submit" id="submit-name" class="btn btn-primary">Submit</button>
@@ -36,6 +36,7 @@
             <!-- Player One -->
             <div id="player-one-display" class="col-md-3 mx-auto game-display">
                 <p id="player-one-name">Waiting for Player 1</p>
+                <p id="player-one-stats"></p>
             </div>
             <!-- Outcome -->
             <div id="outcome-display" class="col-md-3 mx-auto game-display">
@@ -43,6 +44,7 @@
             <!-- Player Two -->
             <div id="player-two-display" class="col-md-3 mx-auto game-display">
                 <p id="player-two-name">Waiting for Player 2</p>
+                <p id="player-two-stats"></p>
             </div>
         </div>
         <!-- Chat Display-->
@@ -56,7 +58,7 @@
                 <form>
                     <div class="form-group">
                         <input type="text" id="chat-input" class="form-control" placeholder="Chat Here!">
-                        <button type="submit" id="add-chat" class="btn btn-primary">Submit</button>
+                        <button type="submit" id="submit-chat" class="btn btn-primary">Submit</button>
                     </div>
                 </form>
             </div>
