@@ -24,25 +24,42 @@ var players = 0;
 //Listener for adding players to the database
 database.ref("/players/").on("value", function (snap) {
     if (snap.child("playerOne").exists()) {
-        console.log("playerOne exists");
+        //Assign playerOne to the values in Firebase
         playerOne = snap.val().playerOne;
-        console.log(playerOne)
+        //Update HTML to playerOne name
         $("#player-one-name").text(playerOne.name);
+        //Add playerOne stats to HTML
         $("#player-one-stats").text("Wins: " + playerOne.wins + " Losses: " + playerOne.losses);
     } else {
+        //If playerOne disconnects update HTML back to "Waiting for Player 1"
         $("#player-one-name").text("Waiting for Player 1");
+        //Remove stats
         $("#player-one-stats").text("");
     }
 
     if (snap.child("playerTwo").exists()) {
-        console.log("playerTwo exists");
+        //Assign playerTwo to the values in Firebase
         playerTwo = snap.val().playerTwo;
-        console.log(playerTwo)
+        //Update HTML to playerTwo name
         $("#player-two-name").text(playerTwo.name);
+        //Add playerTwo stats to HTML
         $("#player-two-stats").text("Wins: " + playerTwo.wins + " Losses: " + playerTwo.losses);
     } else {
+        //If playerTwo disconnects update HTML back to "Waiting for Player 2"
         $("#player-two-name").text("Waiting for Player 2");
+        //Remove stats
         $("#player-two-stats").text("");
+    }
+
+    //If playerOne and playerTwo both exist
+    if ((snap.child("playerOne").exists()) && (snap.child("playerTwo").exists())) {
+        //Show game buttons
+        $(".rps").show();
+    }
+    //If playerOne or playerTwo don't exist
+    if (!(snap.child("playerOne").exists()) || !(snap.child("playerTwo").exists())) {
+        //Hide game buttons
+        $(".rps").hide();
     }
 
 })
