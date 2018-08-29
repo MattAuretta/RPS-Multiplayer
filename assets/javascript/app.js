@@ -21,6 +21,20 @@ var losses = 0;
 var ties = 0;
 var players = 0;
 
+database.ref("/players/").on("value", function (snap) {
+    if (snap.child("playerOne").exists()) {
+        console.log("playerOne exists");
+        playerOne = snap.val().playerOne;
+        console.log(playerOne)
+    }
+
+    if (snap.child("playerTwo").exists()) {
+        console.log("playerTwo exists");
+        playerTwo = snap.val().playerTwo;
+        console.log(playerTwo)
+    }
+})
+
 //When user clicks submit name button
 $("#submit-name").on("click", function (event) {
     // Prevent form from submitting
@@ -41,9 +55,9 @@ $("#submit-name").on("click", function (event) {
                 choice: ""
             }
             //Set playerOne object in the database
-            database.ref("/players/player1").set(playerOne);
+            database.ref("/players/playerOne").set(playerOne);
             //Remove playerOne from database on disconnect
-            database.ref("/players/player1").onDisconnect().remove();
+            database.ref("/players/playerOne").onDisconnect().remove();
 
             //Checks if there is a playerOne but still no playerTwo
         } else if (playerOne !== null && playerTwo === null) {
@@ -57,9 +71,9 @@ $("#submit-name").on("click", function (event) {
                 choice: ""
             }
             //Set playerTwo object in the database
-            database.ref("/players/player2").set(playerTwo);
+            database.ref("/players/playerTwo").set(playerTwo);
             //Remove playerTwo from database on disconnect
-            database.ref("/players/player2").onDisconnect().remove();
+            database.ref("/players/playerTwo").onDisconnect().remove();
         }
     }
 
