@@ -16,9 +16,14 @@ var playerOne = null;
 var playerTwo = null;
 var playerOneName = "";
 var playerTwoName = "";
-var wins = 0;
-var losses = 0;
+var playerOneChoice = "";
+var playerTwoChoice = "";
+var playerOneWins = 0;
+var playerOneLosses = 0;
+var playerTwoWins = 0;
+var playerTwoLosses = 0;
 var ties = 0;
+var choice = "";
 
 //Listener for adding players to the database
 database.ref("/players/").on("value", function (snap) {
@@ -84,7 +89,7 @@ $("#submit-name").on("click", function (event) {
                 name: playerOneName,
                 wins: 0,
                 losses: 0,
-                choice: ""
+                choice: playerOneChoice
             }
             //Set playerOne object in the database
             database.ref("/players/playerOne").set(playerOne);
@@ -100,7 +105,7 @@ $("#submit-name").on("click", function (event) {
                 name: playerTwoName,
                 wins: 0,
                 losses: 0,
-                choice: ""
+                choice: playerTwoChoice
             }
             //Set playerTwo object in the database
             database.ref("/players/playerTwo").set(playerTwo);
@@ -115,16 +120,74 @@ $("#submit-chat").on("click", function (event) {
     event.preventDefault();
 });
 
-$("#player-one-display").on("click", ".rps", function(event){
-    event.preventDefault();
-    if(playerOneName == playerOne.name){
-        console.log("it works")
+$("#player-one-display").on("click", ".rps", function () {
+    //Make sure only playerOne can click their own buttons
+    if (playerOneName == playerOne.name) {
+        //Create variable that holds the text of the button the user clicked
+        var selectedChoice = $(this).text();
+        //Set the playerOneChoice to what was selected
+        playerOneChoice = selectedChoice;
+        //Set players choice in Firebase
+        database.ref("/players/playerOne/choice").set(playerOneChoice);
+        console.log(playerOne.choice);
+        //Run game logic function
+        runGameLogic();
     }
-})
+});
 
-$("#player-two-display").on("click", ".rps", function(event){
-    event.preventDefault();
-    if(playerTwoName == playerTwo.name){
-        console.log("it also works")
+$("#player-two-display").on("click", ".rps", function () {
+    //Make sure only playerOne can click their own buttons
+    if (playerTwoName == playerTwo.name) {
+        //Create variable that holds the text of the button the user clicked
+        var selectedChoice = $(this).text();
+        //Set the playerOneChoice to what was selected
+        playerTwoChoice = selectedChoice;
+        //Set players choice in Firebase
+        database.ref("/players/playerTwo/choice").set(playerTwoChoice);
+        console.log(playerTwoChoice);
+        //Run game logic function
+        runGameLogic();
     }
-})
+});
+
+function runGameLogic() {
+    if ((playerOne.choice == "Rock") && (playerTwo.choice == "Scissors")) {
+        playerOneWins++
+        playerTwoLosses++
+        database.ref("/players/playerOne/wins").set(playerOneWins);
+        database.ref("/players/playerTwo/losses").set(playerTwoLosses);
+    }
+    if ((playerOne.choice == "Rock") && (playerTwo.choice == "Paper")) {
+        playerTwoWins++
+        playerOneLosses++
+        database.ref("/players/playerTwo/wins").set(playerTwoWins);
+        database.ref("/players/playerOne/losses").set(playerOneLosses);
+    }
+    if ((playerOne.choice == "Scissors") && (playerTwo.choice == "Paper")) {
+        playerOneWins++
+        playerTwoLosses++
+        database.ref("/players/playerOne/wins").set(playerOneWins);
+        database.ref("/players/playerTwo/losses").set(playerTwoLosses);
+    }
+    if ((playerOne.choice == "Scissors") && (playerTwo.choice == "Rock")) {
+        playerTwoWins++
+        playerOneLosses++
+        database.ref("/players/playerTwo/wins").set(playerTwoWins);
+        database.ref("/players/playerOne/losses").set(playerOneLosses);
+    }
+    if ((playerOne.choice == "Paper") && (playerTwo.choice == "Rock")) {
+        playerOneWins++
+        playerTwoLosses++
+        database.ref("/players/playerOne/wins").set(playerOneWins);
+        database.ref("/players/playerTwo/losses").set(playerTwoLosses);
+    }
+    if ((playerOne.choice == "Paper") && (playerTwo.choice == "Scissors")) {
+        playerTwoWins++
+        playerOneLosses++
+        database.ref("/players/playerTwo/wins").set(playerTwoWins);
+        database.ref("/players/playerOne/losses").set(playerOneLosses);
+    }
+    if (playerOne.choice == playerTwo.choice) {
+        $("#outcome-display").text("Tie Game!")
+    }
+}
