@@ -19,7 +19,6 @@ var playerTwoName = "";
 var wins = 0;
 var losses = 0;
 var ties = 0;
-var players = 0;
 
 //Listener for adding players to the database
 database.ref("/players/").on("value", function (snap) {
@@ -55,11 +54,15 @@ database.ref("/players/").on("value", function (snap) {
     if ((snap.child("playerOne").exists()) && (snap.child("playerTwo").exists())) {
         //Show game buttons
         $(".rps").show();
+        //Set turns to 1
+        database.ref("/turn/").set(1);
     }
     //If playerOne or playerTwo don't exist
     if (!(snap.child("playerOne").exists()) || !(snap.child("playerTwo").exists())) {
         //Hide game buttons
         $(".rps").hide();
+        //Reset turns to 0
+        database.ref("/turn/").set(0)
     }
 
 })
@@ -105,10 +108,23 @@ $("#submit-name").on("click", function (event) {
             database.ref("/players/playerTwo").onDisconnect().remove();
         }
     }
-
-    $("#submit-chat").on("click", function (event) {
-        // Prevent form from submitting
-        event.preventDefault();
-    });
-
 });
+
+$("#submit-chat").on("click", function (event) {
+    // Prevent form from submitting
+    event.preventDefault();
+});
+
+$("#player-one-display").on("click", ".rps", function(event){
+    event.preventDefault();
+    if(playerOneName == playerOne.name){
+        console.log("it works")
+    }
+})
+
+$("#player-two-display").on("click", ".rps", function(event){
+    event.preventDefault();
+    if(playerTwoName == playerTwo.name){
+        console.log("it also works")
+    }
+})
