@@ -22,8 +22,7 @@ var playerOneWins = 0;
 var playerOneLosses = 0;
 var playerTwoWins = 0;
 var playerTwoLosses = 0;
-var ties = 0;
-var choice = "";
+var turn = 0;
 
 //Listener for adding players to the database
 database.ref("/players/").on("value", function (snap) {
@@ -59,17 +58,15 @@ database.ref("/players/").on("value", function (snap) {
     if ((snap.child("playerOne").exists()) && (snap.child("playerTwo").exists())) {
         //Show game buttons
         $(".rps").show();
-        //Set turns to 1
-        database.ref("/turn/").set(1);
     }
     //If playerOne or playerTwo don't exist
     if (!(snap.child("playerOne").exists()) || !(snap.child("playerTwo").exists())) {
         //Hide game buttons
         $(".rps").hide();
         //Reset turns to 0
-        database.ref("/turn/").set(0)
+        turn = 0;
+        database.ref("/turn/").set(turn);
     }
-
 })
 
 //When user clicks submit name button
@@ -113,6 +110,14 @@ $("#submit-name").on("click", function (event) {
             database.ref("/players/playerTwo").onDisconnect().remove();
         }
     }
+
+    if(playerOneName == playerOne.name){
+        $("#username-form").html("Hi " + playerOneName + "! You are Player 1");
+    }
+
+    if(playerTwoName == playerTwo.name){
+        $("#username-form").html("Hi " + playerTwoName + "! You are Player 2");
+    }
 });
 
 $("#submit-chat").on("click", function (event) {
@@ -129,22 +134,22 @@ $("#player-one-display").on("click", ".rps", function () {
         playerOneChoice = selectedChoice;
         //Set players choice in Firebase
         database.ref("/players/playerOne/choice").set(playerOneChoice);
-        console.log(playerOne.choice);
+        $("#player-one-name").append("You chose: " + playerOneChoice);
         //Run game logic function
         runGameLogic();
     }
 });
 
 $("#player-two-display").on("click", ".rps", function () {
-    //Make sure only playerOne can click their own buttons
+    //Make sure only playerTwo can click their own buttons
     if (playerTwoName == playerTwo.name) {
         //Create variable that holds the text of the button the user clicked
         var selectedChoice = $(this).text();
-        //Set the playerOneChoice to what was selected
+        //Set the playerTwoChoice to what was selected
         playerTwoChoice = selectedChoice;
         //Set players choice in Firebase
         database.ref("/players/playerTwo/choice").set(playerTwoChoice);
-        console.log(playerTwoChoice);
+        $("#player-two-name").append("You chose: " + playerTwoChoice);
         //Run game logic function
         runGameLogic();
     }
@@ -190,4 +195,6 @@ function runGameLogic() {
     if (playerOne.choice == playerTwo.choice) {
         $("#outcome-display").text("Tie Game!")
     }
+    turn++;
+    database.ref("/turn/").set(turn);
 }
